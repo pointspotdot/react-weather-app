@@ -10,11 +10,15 @@ body {
 
 header {
   padding-bottom: 20px;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 footer {
-  font-size: smaller;
+  font-size: 13px;
   text-align: end;
+  margin-top: 20px;
 }
 
 table {
@@ -29,12 +33,6 @@ table {
   border-color: ghostwhite;
   margin-top: 50px;
   padding: 25px;
-}
-
-.App .container.wholeApp {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .appTitle {
@@ -86,8 +84,7 @@ table {
   align-self: center;
   font-family: "Pacifico", cursive;
   font-size: xx-large;
-  max-width: fit-content;
-  text-align: center;
+  text-align: right;
   text-transform: capitalize;
 }
 

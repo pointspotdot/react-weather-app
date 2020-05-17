@@ -1,9 +1,6 @@
 import React from "react";
 import "./styles.css";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./fontAwesome";
-
 import CurrentDate from "./CurrentDate";
 import AppLogo from "./AppLogo";
 import Search from "./Search";
@@ -17,7 +14,7 @@ import CurrentConditions from "./CurrentConditions";
 export default function App() {
   return (
     <div className="App">
-      <div className="container wholeApp">
+      <div className="container">
         <div className="row">
           <CurrentDate />
           <header>
@@ -41,6 +38,12 @@ export default function App() {
             </div>
           </div>
         </div>
+      <footer>
+            This app was built by Sara Oliveira for <a href="https://www.shecodes.io/" target="_blank">SheCodes
+                React</a>.
+            <br />
+            You can take a look at the code on the <a href="https://github.com/pointspotdot/react-weather-app" target="_blank">repository</a> on GitHub.
+        </footer>
       </div>
     </div>
   );
