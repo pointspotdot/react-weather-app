@@ -38,11 +38,15 @@ export default function App() {
             </div>
           </div>
         </div>
-      <footer>
-            This app was built by Sara Oliveira for <a href="https://www.shecodes.io/" target="_blank">SheCodes
-                React</a>.
-            <br />
-            You can take a look at the code on the <a href="https://github.com/pointspotdot/react-weather-app" target="_blank">repository</a> on GitHub.
+        <footer>
+          This app was built by Sara Oliveira for{" "}
+          <a href="https://www.shecodes.io/">SheCodes React</a>.
+          <br />
+          You can take a look at the code on the{" "}
+          <a href="https://github.com/pointspotdot/react-weather-app">
+            repository
+          </a>{" "}
+          on GitHub.
         </footer>
       </div>
     </div>
