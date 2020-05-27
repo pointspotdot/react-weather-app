@@ -2,12 +2,14 @@ import React from "react";
 
 import "./CurrentDate.css";
 
+let currentDate = formatDate();
+
 export default function CurrentDate() {
-  let date = formatDate();
+  formatDate();
 
   return (
     <div id="date" className="appTitle card-title date">
-      {date}
+      {currentDate}
     </div>
   );
 }
@@ -88,6 +90,5 @@ function formatDate() {
   } else {
     sentence += date.getMinutes();
   }
-
-  return sentence;
+  currentDate = sentence;
 }
