@@ -160,6 +160,7 @@ table {
 
 .form-control {
   width: unset !important;
+  border: 2px dashed lightgray;
 }
 
 .sunEventsWrapper {
@@ -197,6 +198,6 @@ table {
 .tempButton {
   border: 2px dashed lightgray;
   font-family: "Roboto Mono", monospace;
-  font-size: small;
+  font-size: x-small;
   padding: 10px;
 }

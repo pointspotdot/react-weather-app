@@ -1,16 +1,13 @@
 import React from "react";
 
-export default function CurrentWeatherImage() {
+export default function CurrentWeatherImage(props) {
+  let src = "http://openweathermap.org/img/wn/" + props.icon + "@2x.png";
+  let description = props.description;
   return (
-    <div className="col-5">
-      <div id="weatherConditionsWrapper">
-        <div id="currentConditionsWrapper">
+
           <div>
-            <img id="icon" src="" alt="" />
-            <div id="description" />
+            <img id="icon" src={src} alt="" />
+            <div id="description">{description}</div>
           </div>
-        </div>
-      </div>
-    </div>
   );
 }

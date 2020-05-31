@@ -16,7 +16,10 @@ let apikey = "41745d4e1b63d5f8653e46a51bfe8b21";
 let lon;
 let lat;
 
+let currentForecast;
+
 export default function App() {
+  let [currentWeatherImages, setCurrentWeatherImages] = useState([]);
   let [currentCity, setCurrentCity] = useState("Porto, PT");
   let [units, setUnits] = useState("metric");
 
@@ -42,7 +45,8 @@ export default function App() {
         lat = response.data.coord.lat;
         lon = response.data.coord.lon;
         setCurrentCity(response.data.name + ", " + response.data.sys.country);
-        console.log(response);
+        setWeatherImages(response.data.weather);
+        // console.log(response.data);
         // editAppData(response.data);
       })
       .catch(function (error) {
@@ -146,6 +150,20 @@ export default function App() {
     handleCity(currentCity);
   }
 
+  function setWeatherImages(weather) {
+    let images = [];
+    for (let item in Object.entries(weather)) {
+      let icon = weather[item].icon;
+      let description = weather[item].description;
+
+      images.push(
+        <CurrentWeatherImage id={item} icon={icon} description={description} />
+      );
+    }
+
+    setCurrentWeatherImages(images);
+  }
+
   return (
     <div className="App">
       <div className="container main">
@@ -193,11 +211,13 @@ export default function App() {
             <div className="align-right">
               {units === "metric" ? (
                 <button className="tempButton" onClick={changeToImperial}>
-                  Do you want to see the information in imperial units?
+                  Do you want to see the <br />
+                  information in imperial units?
                 </button>
               ) : (
                 <button className="tempButton" onClick={changeToMetric}>
-                  Do you want to see the information in metric units?
+                  Do you want to see the <br />
+                  information in metric units?
                 </button>
               )}
             </div>
@@ -207,7 +227,13 @@ export default function App() {
               <Intro city={currentCity} />
             </div>
             <div className="row currentWeatherWrapper">
-              <CurrentWeatherImage />
+              <div className="col-5">
+                <div id="weatherConditionsWrapper">
+                  <div id="currentConditionsWrapper">
+                    {currentWeatherImages}
+                  </div>
+                </div>
+              </div>
               <SunEvents />
               <CurrentConditions />
             </div>
