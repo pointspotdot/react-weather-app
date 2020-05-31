@@ -22,6 +22,8 @@ export default function App() {
   let [currentWeatherImages, setCurrentWeatherImages] = useState([]);
   let [currentCity, setCurrentCity] = useState("Porto, PT");
   let [units, setUnits] = useState("metric");
+  let [sunrise, setSunrise] = useState("");
+  let [sunset, setSunset] = useState("");
 
   function handleSearch(event) {
     event.preventDefault();
@@ -46,6 +48,8 @@ export default function App() {
         lon = response.data.coord.lon;
         setCurrentCity(response.data.name + ", " + response.data.sys.country);
         setWeatherImages(response.data.weather);
+        setSunrise = response.data.sys.sunrise;
+        setSunset = response.data.sys.sunset;
         // console.log(response.data);
         // editAppData(response.data);
       })
@@ -92,6 +96,7 @@ export default function App() {
         // handle success
         console.log(response);
         setCurrentCity(response.data.name + ", " + response.data.sys.country);
+        setWeatherImages(response.data.weather);
         // editAppData(response.data);
       })
       .catch(function (error) {
@@ -234,7 +239,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <SunEvents />
+              <SunEvents sunrise={sunrise} sunset={sunset}/>
               <CurrentConditions />
             </div>
           </div>
