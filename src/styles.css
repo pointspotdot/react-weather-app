@@ -29,10 +29,15 @@ table {
 }
 
 .container {
+  background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
   border-style: groove;
   border-color: ghostwhite;
   margin-top: 50px;
   padding: 25px;
+}
+
+.main {
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
 }
 
 .appTitle {
@@ -121,6 +126,11 @@ table {
   color: red;
 }
 
+.note {
+  font-size: small;
+  text-align: end;
+}
+
 .weatherInfo {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -182,4 +192,11 @@ table {
 
 .align-right {
   text-align: right;
+}
+
+.tempButton {
+  border: 2px dashed lightgray;
+  font-family: "Roboto Mono", monospace;
+  font-size: small;
+  padding: 10px;
 }
