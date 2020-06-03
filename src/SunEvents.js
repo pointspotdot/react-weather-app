@@ -21,12 +21,12 @@ export default function SunEvents(props) {
       <div className="sunEvents">
         <div id="sunrise">
           <i className="fas fa-arrow-up"></i>
-          <i className="fas fa-sun"></i> Sunrise is at {sunrise}
+          <i className="fas fa-sun"></i> Sunrise: {sunrise}
         </div>
         <br />
         <div id="sunset">
           <i className="fas fa-arrow-down"></i>
-          <i className="fas fa-sun"></i> Sunset is at {sunset}
+          <i className="fas fa-sun"></i> Sunset: {sunset}
         </div>
       </div>
     </div>

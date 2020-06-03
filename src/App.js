@@ -9,21 +9,28 @@ import Intro from "./Intro";
 import CurrentWeatherImage from "./CurrentWeatherImage";
 import SunEvents from "./SunEvents";
 import CurrentConditions from "./CurrentConditions";
+import Forecast from "./Forecast";
 
 let forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?";
 let weatherUrl = "https://api.openweathermap.org/data/2.5/weather?";
 let apikey = "41745d4e1b63d5f8653e46a51bfe8b21";
+
 let lon;
 let lat;
 
-let currentForecast;
-
 export default function App() {
-  let [currentWeatherImages, setCurrentWeatherImages] = useState([]);
-  let [currentCity, setCurrentCity] = useState("Porto, PT");
+
   let [units, setUnits] = useState("metric");
+  let [currentWeatherImages, setCurrentWeatherImages] = useState([]);
+  let [currentForecast, setCurrentForecast] = useState([]);
+  let [currentCity, setCurrentCity] = useState("");
   let [sunrise, setSunrise] = useState("");
   let [sunset, setSunset] = useState("");
+  let [minTemp, setMinTemp] = useState("");
+  let [maxTemp, setMaxTemp] = useState("");
+  let [averageTemp, setAverageTemp] = useState("");
+  let [windSpeed, setWindSpeed] = useState("");
+  let [humidity, setHumidity] = useState("");
 
   function handleSearch(event) {
     event.preventDefault();
@@ -33,7 +40,36 @@ export default function App() {
     handleCity(city);
   }
 
+  function editAppData(data) {
+    let currentUnits;
+
+    if (units === "metric") {
+      currentUnits = {
+        temp: "ºC",
+        wind: "m/s",
+      };
+    }
+
+    if (units === "imperial") {
+      currentUnits = {
+        temp: "ºF",
+        wind: "mph",
+      };
+    }
+
+    setCurrentCity(data.name + ", " + data.sys.country);
+    setWeatherImages(data.weather);
+    setSunrise(data.sys.sunrise);
+    setSunset(data.sys.sunset);
+    setMinTemp(data.main.temp_min.toFixed(1) + " " + currentUnits.temp);
+    setMaxTemp(data.main.temp_max.toFixed(1) + " " + currentUnits.temp);
+    setAverageTemp(data.main.feels_like.toFixed(1) + " " + currentUnits.temp);
+    setWindSpeed(data.wind.speed + " " + currentUnits.wind);
+    setHumidity(data.main.humidity);
+  }
+
   function handleCity(city) {
+    console.log(units);
     axios
       .get(weatherUrl, {
         params: {
@@ -46,12 +82,7 @@ export default function App() {
         // handle success
         lat = response.data.coord.lat;
         lon = response.data.coord.lon;
-        setCurrentCity(response.data.name + ", " + response.data.sys.country);
-        setWeatherImages(response.data.weather);
-        setSunrise = response.data.sys.sunrise;
-        setSunset = response.data.sys.sunset;
-        // console.log(response.data);
-        // editAppData(response.data);
+        editAppData(response.data);
       })
       .catch(function (error) {
         // handle error
@@ -70,9 +101,7 @@ export default function App() {
           })
           .then(function (response) {
             // handle success
-            console.log(response);
-
-            // editForecast(response.data.list);
+            editForecast(response.data.list);
           })
           .catch(function (error) {
             // handle error
@@ -94,10 +123,9 @@ export default function App() {
       })
       .then(function (response) {
         // handle success
-        console.log(response);
-        setCurrentCity(response.data.name + ", " + response.data.sys.country);
-        setWeatherImages(response.data.weather);
-        // editAppData(response.data);
+        lat = response.data.coord.lat;
+        lon = response.data.coord.lon;
+        editAppData(response.data);
       })
       .catch(function (error) {
         // handle error
@@ -117,8 +145,7 @@ export default function App() {
           })
           .then(function (response) {
             // handle success
-            console.log(response);
-            // editForecast(response.data.list);
+            editForecast(response.data.list);
           })
           .catch(function (error) {
             // handle error
@@ -144,7 +171,7 @@ export default function App() {
       return;
     }
     setUnits("metric");
-    handleCity(currentCity);
+    getFromLocation(lat, lon);
   }
 
   function changeToImperial() {
@@ -152,7 +179,7 @@ export default function App() {
       return;
     }
     setUnits("imperial");
-    handleCity(currentCity);
+    getFromLocation(lat, lon);
   }
 
   function setWeatherImages(weather) {
@@ -162,11 +189,98 @@ export default function App() {
       let description = weather[item].description;
 
       images.push(
-        <CurrentWeatherImage id={item} icon={icon} description={description} />
+        <CurrentWeatherImage key={item} icon={icon} description={description} />
       );
     }
 
     setCurrentWeatherImages(images);
+  }
+
+  function editForecast(data) {
+    let tempUnit;
+    if (units === "metric") {
+      tempUnit = " ºC";
+    } else {
+      tempUnit = " ºF";
+    }
+
+    let query = 7;
+    let forecast = [];
+
+    for (let i = 1; i <= 5; i++) {
+      let index = i;
+      let date = handleForecastDay(data[query].dt);
+      let imageSrc =
+        "http://openweathermap.org/img/wn/" +
+        data[query].weather[0].icon +
+        ".png";
+      let imageAlt = data[query].weather[0].description;
+      let description = data[query].weather[0].description;
+      let temp = data[query].main.temp.toFixed(1) + tempUnit;
+
+      query += 8;
+
+      forecast.push(
+        <Forecast
+          key={index}
+          index={index}
+          date={date}
+          imageSrc={imageSrc}
+          imageAlt={imageAlt}
+          description={description}
+          temp={temp}
+        />
+      );
+    }
+
+    setCurrentForecast(forecast);
+  }
+
+  function handleForecastDay(timeInUnix) {
+    let date = new Date(timeInUnix * 1000);
+    let sentence = date.getDate() + "-";
+
+    switch (date.getMonth()) {
+      case 0:
+        sentence += "Jan-";
+        break;
+      case 1:
+        sentence += "Feb-";
+        break;
+      case 2:
+        sentence += "Mar-";
+        break;
+      case 3:
+        sentence += "Apr-";
+        break;
+      case 4:
+        sentence += "May-";
+        break;
+      case 5:
+        sentence += "Jun-";
+        break;
+      case 6:
+        sentence += "Jul-";
+        break;
+      case 7:
+        sentence += "Aug-";
+        break;
+      case 8:
+        sentence += "Sep-";
+        break;
+      case 9:
+        sentence += "Oct-";
+        break;
+      case 10:
+        sentence += "Nov-";
+        break;
+      case 11:
+        sentence += "Dec-";
+        break;
+      default:
+    }
+
+    return (sentence += date.getFullYear());
   }
 
   return (
@@ -239,9 +353,16 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <SunEvents sunrise={sunrise} sunset={sunset}/>
-              <CurrentConditions />
+              <SunEvents sunrise={sunrise} sunset={sunset} />
+              <CurrentConditions
+                minTemp={minTemp}
+                maxTemp={maxTemp}
+                averageTemp={averageTemp}
+                windSpeed={windSpeed}
+                humidity={humidity}
+              />
             </div>
+            <div className="row forecastWrapper">{currentForecast}</div>
           </div>
         </div>
         <footer>

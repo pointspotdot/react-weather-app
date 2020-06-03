@@ -1,32 +1,38 @@
 import React from "react";
 
-export default function CurrentConditions() {
+export default function CurrentConditions(props) {
   return (
     <div className="col">
       <div id="currentTemps">
         <div className="forecast">
-          <span>The temperature will vary between</span>
+          <span>Temperatures:</span>
           <br />
           <i className="fas fa-temperature-low min" />
-          <span>a low of </span>
-          <span className="currentDayMin" id="temperature" />
+          <span>Low: </span>
+          <span className="currentDayMin" id="temperature">
+            {props.minTemp}
+          </span>
           <br />
           <i className="fas fa-temperature-high max" />
-          <span>and a high of </span>
-          <span className="currentDayMax" id="temperature" />
+          <span>High: </span>
+          <span className="currentDayMax" id="temperature">
+            {props.maxTemp}
+          </span>
           <br />
           <i className="fas fa-temperature-high" />
-          <span>In average, today will feel like </span>
-          <span className="currentDayRealFeel" id="temperature" />
+          <span>Average: </span>
+          <span className="currentDayRealFeel" id="temperature">
+            {props.averageTemp}
+          </span>
           <br />
           <br />
           <span>
-            The wind speed will reach <span id="wind" />
-            <span id="degrees" />
+            <span>Wind speed: </span>
+            <span id="wind">{props.windSpeed}</span>
           </span>
           <br />
           <span>
-            The humidity is <span id="humidity" />%
+            Humidity: <span id="humidity">{props.humidity}</span>%
           </span>
         </div>
       </div>

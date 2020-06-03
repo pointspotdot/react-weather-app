@@ -105,7 +105,7 @@ table {
 .currentWeatherWrapper {
   margin: auto !important;
   text-align: center;
-  padding-left: 15px;
+  padding: 20px;
   width: 95%;
 }
 
@@ -114,9 +114,17 @@ table {
   margin-right: 15px;
 }
 
+.forecastWrapper {
+  padding: 10px;
+}
+
 .forecast {
   padding-left: unset !important;
   text-align: right;
+}
+
+.forecastTemp {
+  min-width: fit-content;
 }
 
 .min {
@@ -201,4 +209,8 @@ table {
   font-family: "Roboto Mono", monospace;
   font-size: x-small;
   padding: 10px;
+}
+
+#temperature {
+  padding-left: 15px;
 }
