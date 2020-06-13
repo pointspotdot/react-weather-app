@@ -361,7 +361,9 @@ export default function App() {
               <div className="row forecastWrapper">{currentForecast}</div>
             </div>
           ) : (
-            <div className="loader"></div>
+            <div className="loader">
+              Search for a city to see the information 🔎
+            </div>
           )}
           <footer>
             This app was built by Sara Oliveira for{" "}
