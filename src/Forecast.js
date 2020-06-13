@@ -1,30 +1,48 @@
 import React from "react";
+import ReactAnimatedWeather from "react-animated-weather";
 
 export default function Forecast(props) {
-  let day = "day" + props.index;
-  let iconId = "iconDay" + props.index;
-  let tempClass = "day" + props.index + "temp";
-  let descClass = "day" + props.index + "desc";
+  let icon;
+
+  switch (props.imageSrc.substring(0, 2)) {
+    case "01":
+      icon = "CLEAR_DAY";
+      break;
+    case "02":
+      icon = "PARTLY_CLOUDY_DAY";
+      break;
+    case "03":
+    case "04":
+      icon = "CLOUDY";
+      break;
+    case "09":
+    case "10":
+    case "11":
+      icon = "RAIN";
+      break;
+    case "13":
+      icon = "SNOW";
+      break;
+    case "50":
+      icon = "FOG";
+      break;
+  }
 
   return (
     <div className="col-sm">
       <div className="card">
-        <div id={day} className="card-header appTitle">
-          {props.date}
-        </div>
+        <div className="card-header appTitle">{props.date}</div>
         <div className="card-body">
           <div className="row">
             <div className="col weatherSymbol">
-              <img id={iconId} src={props.imageSrc} alt={props.imageAlt} />
+              <ReactAnimatedWeather icon={icon} size={64} animate={true} />
             </div>
             <div className="col forecastTemp">
               <i className="fas fa-temperature-high"></i>
-              <span className={tempClass} id="temperature">
-                {props.temp}
-              </span>
+              <span className="temperature"> {props.temp}</span>
             </div>
           </div>
-          <span className={descClass}>{props.description}</span>
+          <span>{props.description}</span>
         </div>
       </div>
     </div>

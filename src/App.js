@@ -11,32 +11,24 @@ import SunEvents from "./SunEvents";
 import CurrentConditions from "./CurrentConditions";
 import Forecast from "./Forecast";
 
-let forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?";
-let weatherUrl = "https://api.openweathermap.org/data/2.5/weather?";
-let apikey = "41745d4e1b63d5f8653e46a51bfe8b21";
+const forecastUrl = "https://api.openweathermap.org/data/2.5/forecast?";
+const weatherUrl = "https://api.openweathermap.org/data/2.5/weather?";
+const apikey = "41745d4e1b63d5f8653e46a51bfe8b21";
 
 let lon;
 let lat;
 
 export default function App() {
-
   let [units, setUnits] = useState("metric");
-  let [currentWeatherImages, setCurrentWeatherImages] = useState([]);
+  let [weatherData, setWeatherData] = useState({ ready: false });
+  let [currentWeatherImages, setCurrentWeatherImages] = useState(null);
   let [currentForecast, setCurrentForecast] = useState([]);
-  let [currentCity, setCurrentCity] = useState("");
-  let [sunrise, setSunrise] = useState("");
-  let [sunset, setSunset] = useState("");
-  let [minTemp, setMinTemp] = useState("");
-  let [maxTemp, setMaxTemp] = useState("");
-  let [averageTemp, setAverageTemp] = useState("");
-  let [windSpeed, setWindSpeed] = useState("");
-  let [humidity, setHumidity] = useState("");
+  let [currentCity, setCurrentCity] = useState(null);
 
   function handleSearch(event) {
     event.preventDefault();
     let city = document.querySelector("#searchField").value;
     city = city === "" ? currentCity : city.trim().toLowerCase();
-
     handleCity(city);
   }
 
@@ -59,23 +51,25 @@ export default function App() {
 
     setCurrentCity(data.name + ", " + data.sys.country);
     setWeatherImages(data.weather);
-    setSunrise(data.sys.sunrise);
-    setSunset(data.sys.sunset);
-    setMinTemp(data.main.temp_min.toFixed(1) + " " + currentUnits.temp);
-    setMaxTemp(data.main.temp_max.toFixed(1) + " " + currentUnits.temp);
-    setAverageTemp(data.main.feels_like.toFixed(1) + " " + currentUnits.temp);
-    setWindSpeed(data.wind.speed + " " + currentUnits.wind);
-    setHumidity(data.main.humidity);
+    setWeatherData({
+      sunrise: data.sys.sunrise,
+      sunset: data.sys.sunset,
+      minTemp: data.main.temp_min.toFixed(1) + " " + currentUnits.temp,
+      maxTemp: data.main.temp_max.toFixed(1) + " " + currentUnits.temp,
+      averageTemp: data.main.feels_like.toFixed(1) + " " + currentUnits.temp,
+      windSpeed: data.wind.speed + " " + currentUnits.wind,
+      humidity: data.main.humidity,
+      ready: true,
+    });
   }
 
   function handleCity(city) {
-    console.log(units);
     axios
       .get(weatherUrl, {
         params: {
           q: city,
-          units: units,
           appid: apikey,
+          units: units,
         },
       })
       .then(function (response) {
@@ -210,10 +204,7 @@ export default function App() {
     for (let i = 1; i <= 5; i++) {
       let index = i;
       let date = handleForecastDay(data[query].dt);
-      let imageSrc =
-        "http://openweathermap.org/img/wn/" +
-        data[query].weather[0].icon +
-        ".png";
+      let imageSrc = data[query].weather[0].icon
       let imageAlt = data[query].weather[0].description;
       let description = data[query].weather[0].description;
       let temp = data[query].main.temp.toFixed(1) + tempUnit;
@@ -223,10 +214,8 @@ export default function App() {
       forecast.push(
         <Forecast
           key={index}
-          index={index}
           date={date}
           imageSrc={imageSrc}
-          imageAlt={imageAlt}
           description={description}
           temp={temp}
         />
@@ -327,54 +316,65 @@ export default function App() {
               </div>
               <CurrentCity currentCity={currentCity} />
             </div>
-            <div className="align-right">
-              {units === "metric" ? (
-                <button className="tempButton" onClick={changeToImperial}>
-                  Do you want to see the <br />
-                  information in imperial units?
-                </button>
-              ) : (
-                <button className="tempButton" onClick={changeToMetric}>
-                  Do you want to see the <br />
-                  information in metric units?
-                </button>
-              )}
-            </div>
+            {weatherData.ready ? (
+              <div className="align-right">
+                {units === "metric" ? (
+                  <button className="tempButton" onClick={changeToImperial}>
+                    Do you want to see the <br />
+                    information in imperial units?
+                  </button>
+                ) : (
+                  <button className="tempButton" onClick={changeToMetric}>
+                    Do you want to see the <br />
+                    information in metric units?
+                  </button>
+                )}
+              </div>
+            ) : (
+              ""
+            )}
           </header>
-          <div className="card container">
-            <div className="date">
-              <Intro city={currentCity} />
-            </div>
-            <div className="row currentWeatherWrapper">
-              <div className="col-5">
-                <div id="weatherConditionsWrapper">
-                  <div id="currentConditionsWrapper">
-                    {currentWeatherImages}
+          {weatherData.ready ? (
+            <div className="card container">
+              <div className="date">
+                <Intro city={currentCity} />
+              </div>
+              <div className="row currentWeatherWrapper">
+                <div className="col-5">
+                  <div id="weatherConditionsWrapper">
+                    <div id="currentConditionsWrapper">
+                      {currentWeatherImages}
+                    </div>
                   </div>
                 </div>
+                <SunEvents
+                  sunrise={weatherData.sunrise}
+                  sunset={weatherData.sunset}
+                />
+                <CurrentConditions
+                  minTemp={weatherData.minTemp}
+                  maxTemp={weatherData.maxTemp}
+                  averageTemp={weatherData.averageTemp}
+                  windSpeed={weatherData.windSpeed}
+                  humidity={weatherData.humidity}
+                />
               </div>
-              <SunEvents sunrise={sunrise} sunset={sunset} />
-              <CurrentConditions
-                minTemp={minTemp}
-                maxTemp={maxTemp}
-                averageTemp={averageTemp}
-                windSpeed={windSpeed}
-                humidity={humidity}
-              />
+              <div className="row forecastWrapper">{currentForecast}</div>
             </div>
-            <div className="row forecastWrapper">{currentForecast}</div>
-          </div>
+          ) : (
+            <div className="loader"></div>
+          )}
+          <footer>
+            This app was built by Sara Oliveira for{" "}
+            <a href="https://www.shecodes.io/"> SheCodes React</a>.
+            <br />
+            You can take a look at the code on the{" "}
+            <a href="https://github.com/pointspotdot/react-weather-app">
+              repository
+            </a>{" "}
+            on GitHub.
+          </footer>
         </div>
-        <footer>
-          This app was built by Sara Oliveira for{" "}
-          <a href="https://www.shecodes.io/">SheCodes React</a>.
-          <br />
-          You can take a look at the code on the{" "}
-          <a href="https://github.com/pointspotdot/react-weather-app">
-            repository
-          </a>{" "}
-          on GitHub.
-        </footer>
       </div>
     </div>
   );

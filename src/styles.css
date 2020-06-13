@@ -19,6 +19,7 @@ footer {
   font-size: 13px;
   text-align: end;
   margin-top: 20px;
+  width: 100%;
 }
 
 table {
@@ -144,10 +145,16 @@ table {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
 .weatherSymbol {
-  text-align: center;
-  font-size: 30px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-right: unset;
+  padding-top: 10px;
+}
+
+.weatherImage {
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 #sunrise,
@@ -211,6 +218,12 @@ table {
   padding: 10px;
 }
 
-#temperature {
+span.#temperature {
   padding-left: 15px;
+  font-size: medium;
+}
+
+.loader {
+  padding: 15px;
+  width: 100%;
 }
