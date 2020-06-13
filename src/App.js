@@ -204,8 +204,7 @@ export default function App() {
     for (let i = 1; i <= 5; i++) {
       let index = i;
       let date = handleForecastDay(data[query].dt);
-      let imageSrc = data[query].weather[0].icon
-      let imageAlt = data[query].weather[0].description;
+      let imageSrc = data[query].weather[0].icon;
       let description = data[query].weather[0].description;
       let temp = data[query].main.temp.toFixed(1) + tempUnit;
 

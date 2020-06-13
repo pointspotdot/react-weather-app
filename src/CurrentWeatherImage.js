@@ -26,6 +26,8 @@ export default function CurrentWeatherImage(props) {
     case "50":
       icon = "FOG";
       break;
+    default:
+      break;
   }
 
   return (

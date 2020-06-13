@@ -26,6 +26,8 @@ export default function Forecast(props) {
     case "50":
       icon = "FOG";
       break;
+    default:
+      break;
   }
 
   return (
